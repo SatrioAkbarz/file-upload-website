@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+</head>
+<body>
+    <h1>Upload File</h1>
+    <input type="file" id="fileInput">
+    <button id="uploadButton">Upload</button>
+    <p id="status"></p>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "PROJECT_ID.firebaseapp.com",
+            projectId: "PROJECT_ID",
+            storageBucket: "PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID",
+            measurementId: "G-MEASUREMENT_ID"
+        };
+
+        // Inisialisasi Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+        // Fungsi untuk mengunggah file
+        document.getElementById('uploadButton').onclick = function() {
+            const file = document.getElementById('fileInput').files[0];
+            const storageRef = storage.ref('uploads/' + file.name);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed', function(snapshot) {
+                document.getElementById('status').innerHTML = 'Uploading...';
+            }, function(error) {
+                document.getElementById('status').innerHTML = 'Upload failed: ' + error;
+            }, function() {
+                document.getElementById('status').innerHTML = 'Upload successful!';
+            });
+        }
+    </script>
+</body>
+</html>
